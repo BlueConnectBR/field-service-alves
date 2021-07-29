@@ -4,7 +4,7 @@
         <field name="name">fsm.order.type.tree</field>
         <field name="model">fsm.order.type</field>
         <field name="arch" type="xml">
-            <tree string="Order Types">
+            <tree string="OS - Agrupamento (Subtipo)">
                 <field name="name" />
                 <field name="internal_type" />
             </tree>
@@ -15,11 +15,11 @@
         <field name="name">fsm.order.type.form</field>
         <field name="model">fsm.order.type</field>
         <field name="arch" type="xml">
-            <form string="Type">
+            <form string="Agrupamento (Subtipo)">
                 <sheet>
                     <label for="name" class="oe_edit_only" />
                     <h1>
-                        <field name="name" />
+                        <field name="name" string="Agrupamento (Subtipo)" />
                     </h1>
                     <group>
                         <field name="internal_type" />
@@ -29,7 +29,7 @@
         </field>
     </record>
     <record id="action_fsm_order_type" model="ir.actions.act_window">
-        <field name="name">Order Types</field>
+        <field name="name">Agrupamento (Subtipo)</field>
         <field name="res_model">fsm.order.type</field>
         <field name="view_id" ref="fsm_order_type_tree_view" />
         <field name="view_mode">tree,form</field>

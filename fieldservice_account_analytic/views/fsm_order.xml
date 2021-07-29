@@ -12,6 +12,9 @@
                             widget="radio"
                             options="{'horizontal': true}"
                         />
+						<field name="fator_k"/>
+                        <field name="x_valor_total"/>
+                        <field name="valor_servico"/>
                     </group>
                 </page>
             </notebook>
@@ -25,8 +28,8 @@
         <field name="model">fsm.order</field>
         <field name="inherit_id" ref="fieldservice.fsm_order_tree_view" />
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="customer_id" />
+            <field name="name" position="before">
+                <field name="customer_id" invisible="1"/>
             </field>
         </field>
     </record>

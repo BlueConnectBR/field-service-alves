@@ -40,6 +40,32 @@ class FSMOrder(models.Model):
         else:
             raise ValidationError(_("You must create an FSM team first."))
 
+# Duração entre data da abertura da OS e data fim
+#    @api.depends("date_start", "date_end")
+#    def _compute_duration_os(self):
+#        duration_os = 0.0
+#        for rec in self:
+#            if rec.request_early and rec.scheduled_date_end:
+#                start = fields.Datetime.from_string(rec.request_early)
+#                end = fields.Datetime.from_string(rec.scheduled_date_end)
+#                delta = end - start
+#                duration_os = delta.total_seconds() / 3600
+#            rec.duration_os = duration_os
+# TypeError: 'int' object is not callable Necessario converter em Dias/Inteiros
+#                duration_os = delta.days()
+##
+
+    @api.depends("request_early", "scheduled_date_end")
+    def _compute_duration_os(self):
+        duration_os = 0.0
+        for rec in self:
+            if rec.request_early and rec.scheduled_date_end:
+                start = fields.Datetime.from_string(rec.request_early)
+                end = fields.Datetime.from_string(rec.scheduled_date_end)
+                delta = end - start
+                duration_os = delta.total_seconds() / 86400
+            rec.duration_os = duration_os
+
     @api.depends("date_start", "date_end")
     def _compute_duration(self):
         duration = 0.0
@@ -169,6 +195,21 @@ class FSMOrder(models.Model):
     scheduled_date_end = fields.Datetime(string="Scheduled End")
     sequence = fields.Integer(string="Sequence", default=10)
     todo = fields.Text(string="Instructions")
+    valor_servico = fields.Float(related="team_id.valor_servico", store=True, string="Valor Serviço",  help="Informe o valor unitario da ordem de serviço")
+    fator_k = fields.Float(default=1.0, string="Fator K", help="Informe o fator de faturamento dessa ordem de serviço")
+#    valor_total = fields.Float(
+#        string='Valor Total')
+#        compute=_compute_valor_total)
+    #        store=True,
+    #        required=False)
+######################################################
+#   Duração entre abertora da OS e data fim programada
+    duration_os = fields.Float(default=0.0,
+        string="Duração Abertura da OS",
+        store=True,
+        compute=_compute_duration_os,
+        help="Duração entre abertora da OS e data fim programada",
+    )
 
     # Execution
     resolution = fields.Text(string="Resolution")
@@ -222,7 +263,7 @@ class FSMOrder(models.Model):
 
     # Equipment used for all other Service Orders
     equipment_ids = fields.Many2many("fsm.equipment", string="Equipments")
-    type = fields.Many2one("fsm.order.type", string="Type")
+    type = fields.Many2one("fsm.order.type",related="x_agrupamento", store=True, string="Type", readonly=True)
 
     internal_type = fields.Selection(
         string="Internal Type", related="type.internal_type"
@@ -285,8 +326,9 @@ class FSMOrder(models.Model):
             vals["is_button"] = False
         else:
             stage_id = self.env["fsm.stage"].browse(vals.get("stage_id"))
-            if stage_id == self.env.ref("fieldservice.fsm_stage_completed"):
-                raise UserError(_("Cannot move to completed from Kanban"))
+# Desabilitado por Diego afim de permitir alterar estagios para concluido em lote
+#           if stage_id == self.env.ref("fieldservice.fsm_stage_completed"):
+#                raise UserError(_("Cannot move to completed from Kanban"))
         self._calc_scheduled_dates(vals)
         res = super(FSMOrder, self).write(vals)
         return res
@@ -300,6 +342,9 @@ class FSMOrder(models.Model):
             return super(FSMOrder, self).unlink()
         else:
             raise ValidationError(_("You cannot delete this order."))
+
+
+
 
     def _calc_scheduled_dates(self, vals):
         """Calculate scheduled dates and duration"""

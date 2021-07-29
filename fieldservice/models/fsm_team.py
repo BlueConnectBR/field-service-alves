@@ -12,6 +12,30 @@ class FSMTeam(models.Model):
     def _default_stages(self):
         return self.env["fsm.stage"].search([("is_default", "=", True)])
 
+
+## Diego ## 26/07/2021 "stage_id", "=", 16
+    def _compute_agendadas_count(self):
+        order_data = self.env["fsm.order"].read_group(
+            [("team_id", "in", self.ids), ("stage_id", "=", 16 )],
+            ["team_id"],
+            ["team_id"],
+        )
+        result = {data["team_id"][0]: int(data["team_id_count"]) for data in order_data}
+        for team in self:
+            team.agendadas_count = result.get(team.id, 0)
+
+    def _compute_reagendadas_count(self):
+        order_data = self.env["fsm.order"].read_group(
+            [("team_id", "in", self.ids), ("stage_id", "=", 15 )],
+            ["team_id"],
+            ["team_id"],
+        )
+        result = {data["team_id"][0]: int(data["team_id_count"]) for data in order_data}
+        for team in self:
+            team.reagendadas_count = result.get(team.id, 0)
+##
+
+
     def _compute_order_count(self):
         order_data = self.env["fsm.order"].read_group(
             [("team_id", "in", self.ids), ("stage_id.is_closed", "=", False)],
@@ -42,8 +66,9 @@ class FSMTeam(models.Model):
         for team in self:
             team.order_need_schedule_count = result.get(team.id, 0)
 
-    name = fields.Char(required=True, translate=True)
-    description = fields.Text(translate=True)
+    name = fields.Char(required=True, translate=True, string="Código do Serviço")
+    description = fields.Text(translate=True, string="Descrição do Serviço")
+    type = fields.Many2one("fsm.order.type", string="Type")
     color = fields.Integer("Color Index")
     stage_ids = fields.Many2many(
         "fsm.stage",
@@ -59,12 +84,22 @@ class FSMTeam(models.Model):
         string="Orders",
         domain=[("stage_id.is_closed", "=", False)],
     )
-    order_count = fields.Integer(compute="_compute_order_count", string="Orders Count")
+
+# Diego # 26/07/2021
+    valor_servico = fields.Float(
+        default=0.0,
+        string="Valor do Serviço",
+        store=True,
+        help="O valor unitario do serviço")
+# Adicionado contadores para ordens de serviços agendados, para agendar.
+    agendadas_count = fields.Integer(compute="_compute_agendadas_count", string="Total OS Agendadas")
+    reagendadas_count = fields.Integer(compute="_compute_reagendadas_count", string="Total OS Reagendadas")
+    order_count = fields.Integer(compute="_compute_order_count", string="Total Ordens Abertas")
     order_need_assign_count = fields.Integer(
-        compute="_compute_order_need_assign_count", string="Orders to Assign"
+        compute="_compute_order_need_assign_count", string="Total OS para Atríbuir"
     )
     order_need_schedule_count = fields.Integer(
-        compute="_compute_order_need_schedule_count", string="Orders to Schedule"
+        compute="_compute_order_need_schedule_count", string="Total OS para Agendar"
     )
     sequence = fields.Integer(
         "Sequence", default=1, help="Used to sort teams. Lower is better."

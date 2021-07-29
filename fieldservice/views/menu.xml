@@ -27,7 +27,7 @@
     <!-- Dashboard Menu -->
     <menuitem
         id="menu_fsm_dash_team"
-        name="Teams"
+        name="Painel"
         action="action_team_dashboard"
         parent="dashboard"
         sequence="10"
@@ -151,7 +151,7 @@
     />
     <menuitem
         id="menu_fsm_order_type"
-        name="Order Types"
+        name="Subtipos de OS"
         action="action_fsm_order_type"
         parent="menu_fsm_config_order"
         sequence="30"
@@ -173,7 +173,7 @@
     />
     <menuitem
         id="menu_fsm_team"
-        name="Teams"
+        name="Tipos de OS"
         action="action_team_settings"
         parent="menu_fsm_config_person"
         sequence="10"

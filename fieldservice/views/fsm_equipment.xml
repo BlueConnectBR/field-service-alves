@@ -4,7 +4,7 @@
         <field name="name">fsm.equipment.search</field>
         <field name="model">fsm.equipment</field>
         <field name="arch" type="xml">
-            <search string="Equipments">
+            <search string="Painel">
                 <field name="name" string="FSM Equipment Name" />
                 <field name="location_id" />
                 <field name="current_location_id" required="True" />
@@ -176,56 +176,126 @@
                 <field name="color" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div
-                            t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"
-                        >
-                            <div class="o_dropdown_kanban dropdown">
-                                <a
-                                    role="button"
-                                    class="dropdown-toggle o-no-caret btn"
-                                    data-toggle="dropdown"
-                                    href="#"
-                                    aria-label="Dropdown menu"
-                                    title="Dropdown menu"
-                                >
-                                    <span class="fa fa-ellipsis-v" />
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <a
-                                        t-if="widget.editable"
-                                        role="menuitem"
-                                        type="edit"
-                                        class="dropdown-item"
-                                    >Edit
-                                    </a>
-                                    <a
-                                        t-if="widget.deletable"
-                                        role="menuitem"
-                                        type="delete"
-                                        class="dropdown-item"
-                                    >Delete
-                                    </a>
-                                    <div role="separator" class="dropdown-divider" />
-                                    <ul
-                                        class="oe_kanban_colorpicker"
-                                        data-field="color"
-                                    />
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div>
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <span>
+                                                <t t-esc="record.name.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#" groups="fieldservice.group_fsm_manager">
+                                            <i class="fa fa-ellipsis-v" title="Manager"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="556" type="action" context="{'search_default_todo': 1}">
+                                                <t t-esc="record.order_count.value"/>
+                                                OS Abertas
+                                            </button>
+                                        </div>
+                                        <div class="col-6 o_kanban_primary_right">
+
+<!-- Quantidade Programadas e Repgrogramar -->
+
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <a name="556" type="action" context="{'search_default_programadas': 1}">
+                                                        Agendadas
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <a name="556" type="action" context="{'search_default_reprogramadas': 1}">
+                                                        P/ Reagendar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+<!-- Quantidade Programadas e Repgrogramar -->
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <a name="556" type="action" context="{'search_default_unscheduled': 1}">
+                                                        P/ Agendar
+                                                    </a>
+                                                </div>
+                                                <div class="col-3">
+                                                    <t t-esc="record.order_need_schedule_count.value"/>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <a name="556" type="action" context="{'search_default_unassigned': 1}">
+                                                        P/ Atribuir
+                                                    </a>
+                                                </div>
+                                                <div class="col-3">
+                                                    <t t-esc="record.order_need_assign_count.value"/>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu" groups="fieldservice.group_fsm_manager">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                            <div role="menuitem" class="o_kanban_card_manage_title">
+                                                <span>View</span>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="556" type="action">
+                                                    All
+                                                </a>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="556" type="action" context="{'search_default_unassigned': 1}">
+                                                    Para Atribuir
+                                                </a>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="556" type="action" context="{'search_default_unscheduled': 1}">
+                                                    Para Agendar
+                                                </a>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="556" type="action" context="{'search_default_done': 1}">
+                                                    Done
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                            <div role="menuitem" class="o_kanban_card_manage_title">
+                                                <span>Reporting</span>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="548" type="action" context="{'search_default_team_id': active_id}">
+                                                    Orders
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                        <div class="col-8" role="menuitem" aria-haspopup="true">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                        </div>
+                                        <div role="menuitem" class="col-4 text-center">
+                                            <a type="edit">Settings</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="oe_kanban_content">
-                                <div>
-                                    <strong class="o_kanban_record_title">
-                                        <field name="name" />
-                                    </strong>
-                                </div>
-                                <div>
-                                    <field name="location_id" />
-                                </div>
-                                <div>
-                                    <field name="person_id" />
-                                </div>
-                            </div>
-                            <div class="oe_clear" />
                         </div>
                     </t>
                 </templates>

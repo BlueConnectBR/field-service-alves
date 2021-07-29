@@ -6,182 +6,114 @@
         <field name="arch" type="xml">
             <form string="Order">
                 <header>
-                    <button
-                        id="action_complete"
-                        name="action_complete"
-                        string="Complete"
-                        class="oe_highlight"
-                        type="object"
-                        groups="fieldservice.group_fsm_user"
-                        attrs="{'invisible': [('stage_id', 'in', (%(fieldservice.fsm_stage_completed)d, %(fieldservice.fsm_stage_cancelled)d))]}"
-                    />
-                    <field name="is_button" invisible="1" />
-                    <button
-                        id="action_cancel"
-                        name="action_cancel"
-                        string="Cancel Order"
-                        type="object"
-                        groups="fieldservice.group_fsm_dispatcher"
-                        attrs="{'invisible': [('stage_id', 'in', (%(fieldservice.fsm_stage_completed)d, %(fieldservice.fsm_stage_cancelled)d))]}"
-                    />
-                    <field
-                        name="stage_id"
-                        widget="statusbar"
-                        options="{'fold_field': 'fold'}"
-                        domain="[('stage_type', '=', 'order'),
-                                    ('team_ids', 'in', (team_id, False))]"
-                    />
+                    <button id="action_complete" name="action_complete" string="Complete" class="oe_highlight" type="object" groups="fieldservice.group_fsm_user" attrs="{'invisible': [('stage_id', 'in', (2, 3))]}"/>
+                    <field name="is_button" invisible="1"/>
+                    <button id="action_cancel" name="action_cancel" string="Cancel Order" type="object" groups="fieldservice.group_fsm_dispatcher" attrs="{'invisible': [('stage_id', 'in', (2, 3))]}"/>
+                    <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}" domain="[('stage_type', '=', 'order'),                                     ('team_ids', 'in', (team_id, False))]"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box" />
+                    <div class="oe_button_box" name="button_box"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1" />
+                            <field name="name" readonly="1"/> - 
+                            <field name="x_matricula" readonly="1"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field
-                                name="type"
-                                options="{'no_create': True, 'no_open': True}"
-                            />
-                            <field
-                                name="template_id"
-                                groups="fieldservice.group_fsm_template"
-                            />
-                            <field name="priority" widget="priority" />
-                            <field
-                                name="tag_ids"
-                                widget="many2many_tags"
-                                options="{'color_field': 'color', 'no_create_edit': True}"
-                            />
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="x_nome"/>
+                            <field name="x_localidade"/>
+                            <field name="x_setor"/>
+                            <field name="x_quadra"/>
+                            <field name="x_duracao"/>
                         </group>
+
                         <group>
-                            <field name="location_id" />
-                            <field name="territory_id" invisible='1' />
-                            <field name="branch_id" invisible='1' />
-                            <field name="district_id" invisible='1' />
-                            <field name="region_id" invisible='1' />
-                            <field
-                                name="team_id"
-                                groups="fieldservice.group_fsm_team"
-                            />
-                            <field name="person_id" />
-                            <field name="internal_type" invisible="1" />
-                            <field
-                                name="equipment_id"
-                                attrs="{'invisible':[('internal_type', 'not in',['repair', 'maintenance'])]}"
-                                groups="fieldservice.group_fsm_equipment"
-                                options="{'no_create': True}"
-                                domain="[('current_location_id','=',location_id)]"
-                            />
-                            <field
-                                name="company_id"
-                                options="{'no_create': True}"
-                                groups="base.group_multi_company"
-                            />
+                            <field name="priority" widget="priority"/>
+                            <field name="type" options="{'no_create': True, 'no_open': True}" string="Agrupamento (Subtipo)"/>
+                            <field name="team_id" groups="fieldservice.group_fsm_team" string="Tipo Serviço" options="{'no_create': True}"/>
+                            <field name="location_id"/>
+                            <field name="territory_id" invisible="1"/>
+                            <field name="branch_id" invisible="1"/>
+                            <field name="district_id" invisible="1"/>
+                            <field name="region_id" invisible="1"/>
+                            <field name="person_id"/>
+                            <field name="internal_type" invisible="1"/>
+                            <field name="equipment_id" attrs="{'invisible':[('internal_type', 'not in',['repair', 'maintenance'])]}" groups="fieldservice.group_fsm_equipment" options="{'no_create': True}" domain="[('current_location_id','=',location_id)]"/>
+                            <field name="template_id" groups="fieldservice.group_fsm_template"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
+
                     <group string="Description" name="description_grp">
-                        <field name="description" nolabel="1" />
+                        <field name="description" nolabel="1"/>
                     </group>
                     <group string="Resolution" name="resolution_grp">
-                        <field name="resolution" nolabel="1" />
+                        <field name="resolution" nolabel="1"/>
                     </group>
                     <notebook>
                         <page string="Planning" name="planning_page">
                             <group>
                                 <group string="Requirements" name="requirements_grp">
-                                    <field
-                                        name="category_ids"
-                                        widget="many2many_tags"
-                                        options="{'color_field': 'color'}"
-                                    />
-                                    <field name="request_early" />
-                                    <field name="request_late" />
+                                    <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="request_early"/>
+                                    <field name="request_late"/>
                                 </group>
                                 <group id="schedule" string="Schedule Details">
-                                    <field name="scheduled_date_start" />
-                                    <field name="scheduled_duration" />
-                                    <field name="scheduled_date_end" readonly="1" />
+                                    <field name="x_data_programada" widget="date" options="{'format': 'dd/MM/yyyy'}"/>
+                                    <field name="scheduled_date_start" invisible="1"/>
+                                    <field name="scheduled_duration" string="Duração em Horas" help="Calcular automaticamente a data de programação/fim a depender da duração em horas de execução do serviço"/>
+                                    <field name="scheduled_date_end" readonly="1" widget="date" options="{'format': 'dd/MM/yyyy'}"/>
+									<field name="duration_os" string="Duração em Dias" help="Desde 1º abertura da OS e data programada fim"/>
                                 </group>
                             </group>
-                            <group string="Request Workers" name="request_workers">
-                                <field
-                                    name="person_ids"
-                                    widget="many2many"
-                                    nolabel="1"
-                                    context="{'search_default_location_ids': location_id}"
-                                >
+                            <group string="Request Workers" name="request_workers" invisivle="1">
+                                <field name="person_ids" widget="many2many" nolabel="1" context="{'search_default_location_ids': location_id}">
                                     <tree>
-                                        <field name="name" />
-                                        <field
-                                            name="category_ids"
-                                            widget="many2many_tags"
-                                            options="{'color_field': 'color'}"
-                                        />
-                                        <field name="phone" />
-                                        <field name="email" />
+                                        <field name="name"/>
+                                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <field name="phone"/>
+                                        <field name="email"/>
                                     </tree>
                                 </field>
                             </group>
                         </page>
                         <page string="Instructions" name="instructions_page">
                             <group string="Instructions" name="instructions_grp">
-                                <field name="todo" nolabel="1" widget="html" />
+                                <field name="todo" nolabel="1" widget="html"/>
                             </group>
-                            <group
-                                string="Location Directions"
-                                name="location_directions_grp"
-                            >
-                                <field
-                                    name="location_directions"
-                                    nolabel="1"
-                                    widget="html"
-                                />
+                            <group string="Location Directions" name="location_directions_grp">
+                                <field name="location_directions" nolabel="1" widget="html"/>
                             </group>
                         </page>
-                        <page string="Execution" name="execution_page">
+                        <page string="Execution" name="execution_page" invisible="1">
                             <group>
                                 <group id="execution-left">
-                                    <field name="date_start" />
-                                    <field name="date_end" />
-                                    <field name="duration" readonly="1" />
+                                    <field name="date_start" options="{'format': 'dd/MM/yyyy'}"/>
+                                    <field name="date_end" options="{'format': 'dd/MM/yyyy'}"/>
+                                    <field name="duration" readonly="1"/>
                                 </group>
-                                <group id="execution-right" />
+                                <group id="execution-right"/>
                             </group>
                         </page>
-                        <page
-                            string="Equipments"
-                            groups="fieldservice.group_fsm_equipment"
-                            name="equipements_page"
-                            attrs="{'invisible': [('internal_type', 'in', ['repair', 'maintenance'])]}"
-                        >
-                            <field
-                                name="equipment_ids"
-                                attrs="{'required': [('internal_type', 'not in', ['repair', 'maintenance'])]}"
-                                options="{'no_create': True}"
-                                domain="[('current_location_id','=',location_id)]"
-                            >
+                        <page string="Equipments" groups="fieldservice.group_fsm_equipment" name="equipements_page" attrs="{'invisible': [('internal_type', 'in', ['repair', 'maintenance'])]}">
+                            <field name="equipment_ids" attrs="{'required': [('internal_type', 'not in', ['repair', 'maintenance'])]}" options="{'no_create': True}" domain="[('current_location_id','=',location_id)]">
                                 <tree>
-                                    <field name="name" />
-                                    <field name="person_id" />
-                                    <field name="location_id" />
-                                    <field name="current_location_id" />
-                                    <field name="stage_id" />
+                                    <field name="name"/>
+                                    <field name="person_id"/>
+                                    <field name="location_id"/>
+                                    <field name="current_location_id"/>
+                                    <field name="stage_id"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field
-                        name="message_ids"
-                        widget="mail_thread"
-                        options="{'post_refresh': 'recipients'}"
-                    />
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
                 </div>
             </form>
         </field>
@@ -191,12 +123,14 @@
         <field name="model">fsm.order</field>
         <field name="arch" type="xml">
             <tree name="orders" string="Orders" default_order="scheduled_date_start">
-                <field name="scheduled_date_start" />
-                <field name="name" />
-                <field name="location_id" />
-                <field name="person_id" />
-                <field name="stage_id" string="Stage" />
-                <field name="company_id" groups="base.group_multi_company" />
+                <field name="name" string="OS Interna"/>
+                <field name="x_matricula" string="OS Referência"/>
+                <field name="request_early" widget="date" options="{'format': 'dd/MM/yyyy'}"/>
+                <field name="scheduled_date_start" widget="date" options="{'format': 'dd/MM/yyyy'}"/>
+                <field name="location_id"/>
+                <field name="person_id"/>
+                <field name="stage_id" string="Stage"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
@@ -313,101 +247,50 @@
         <field name="name">fsm.order.search</field>
         <field name="model">fsm.order</field>
         <field name="arch" type="xml">
-            <search string="Orders">
-                <filter
-                    string="My Orders"
-                    domain="[('person_id.partner_id.user_ids', '=', uid)]"
-                    name="my_orders"
-                />
-                <separator />
-                <field
-                    name="name"
-                    filter_domain="['|', ('name', 'ilike', self), ('name', '=like', str(self) + '%')]"
-                    string="FSM Order Name"
-                />
-                <field name="location_id" />
-                <field name="branch_id" />
-                <field name="district_id" />
-                <field name="region_id" />
-                <field name="team_id" groups="fieldservice.group_fsm_team" />
-                <field name="person_ids" />
-                <separator />
-                <filter
-                    string="To Do"
-                    domain="[('stage_id.is_closed', '=', False)]"
-                    name="todo"
-                />
-                <filter
-                    string="Unassigned"
-                    domain="[('person_id', '=', False)]"
-                    name="unassigned"
-                />
-                <filter
-                    string="Unscheduled"
-                    domain="[('scheduled_date_start', '=', False)]"
-                    name="unscheduled"
-                />
-                <filter
-                    string="Done"
-                    domain="[('stage_id.is_closed', '=', True)]"
-                    name="done"
-                />
-                <separator />
-                <filter
-                    string="Today Orders"
-                    domain="[
-                    ('scheduled_date_start', '&gt;=', (datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)))),
-                    ('scheduled_date_start', '&lt;', (datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59))))
-                    ]"
-                    name="order_today"
-                />
-                <filter
-                    string="Future Orders"
-                    domain="[('scheduled_date_start', '&gt;=', (datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0))))]"
-                    name="order_upcoming_all"
-                />
-                <filter
-                    string="Due Within 7 Days"
-                    domain="[
-                    ('scheduled_date_start', '&gt;=', (datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)))),
-                    ('scheduled_date_start', '&lt;=', (datetime.datetime.combine((datetime.date.today()+relativedelta(days=6)), datetime.time(23,59,59))))
-                    ]"
-                    name="order_upcoming_week"
-                />
-                <filter
-                    string="Due Within 30 Days"
-                    domain="[
-                    ('scheduled_date_start', '&gt;=',(datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)))),
-                    ('scheduled_date_start', '&lt;=', (datetime.datetime.combine((datetime.date.today()+relativedelta(days=29)), datetime.time(23,59,59))))
-                    ]"
-                    name="order_upcoming_month"
-                />
-                <separator />
+			<search string="Orders">
+                <filter string="My Orders" domain="[('person_id.partner_id.user_ids', '=', uid)]" name="my_orders"/>
+                <separator/>
+               <field name="x_matricula" filter_domain="['|', ('x_matricula', 'ilike', self), ('x_matricula', '=like', str(self) + '%')]" string="Ordem de Serviço - SS"/>
+
+<!--                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('name', '=like', str(self) + '%')]" string="FSM Order Name"/>
+
+                <field name="location_id"/>
+                <field name="branch_id"/>
+                <field name="district_id"/>
+                <field name="region_id"/>
+                <field name="team_id" groups="fieldservice.group_fsm_team"/>
+                <field name="person_ids"/>
+-->
+                <separator/>
+                <filter string="To Do" domain="[('stage_id.is_closed', '=', False)]" name="todo"/>
+                <filter string="Unassigned" domain="[('person_id', '=', False)]" name="unassigned"/>
+                <filter string="Unscheduled" domain="[('scheduled_date_start', '=', False)]" name="unscheduled"/>
+                <filter string="Done" domain="[('stage_id.is_closed', '=', True)]" name="done"/>
+                <filter string="Ordens Programadas" domain="[('stage_id', '=', 16)]" name="programadas"/>
+                <filter string="Ordens p/ Reprogramar" domain="[('stage_id', '=', 15)]" name="reprogramadas"/>
+                <separator/>
+                 <filter string="Ordens Atrasadas" name="late" domain="['&amp;',('scheduled_date_start', '&lt;', context_today().strftime('%Y-%m-%d')),('stage_id.is_closed', '=', False)]"/>
+				
+                <filter string="Today Orders" domain="[                     ('scheduled_date_start', '&gt;=', (datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)))),                     ('scheduled_date_start', '&lt;', (datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59))))                     ]" name="order_today"/>
+                <filter string="Future Orders" domain="[('scheduled_date_start', '&gt;=', (datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0))))]" name="order_upcoming_all"/>
+                <filter string="Due Within 7 Days" domain="[                     ('scheduled_date_start', '&gt;=', (datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)))),                     ('scheduled_date_start', '&lt;=', (datetime.datetime.combine((datetime.date.today()+relativedelta(days=6)), datetime.time(23,59,59))))                     ]" name="order_upcoming_week"/>
+                <filter string="Due Within 30 Days" domain="[                     ('scheduled_date_start', '&gt;=',(datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)))),                     ('scheduled_date_start', '&lt;=', (datetime.datetime.combine((datetime.date.today()+relativedelta(days=29)), datetime.time(23,59,59))))                     ]" name="order_upcoming_month"/>
+                <separator/>
                 <group expand="0" string="Group By">
-                    <filter
-                        name="territory_id"
-                        string="Territory"
-                        domain=""
-                        context="{'group_by':'territory_id'}"
-                    />
-                    <filter
-                        name="branch_id"
-                        string="Branch"
-                        domain=""
-                        context="{'group_by':'branch_id'}"
-                    />
-                    <filter
-                        name="district_id"
-                        string="District"
-                        domain=""
-                        context="{'group_by':'district_id'}"
-                    />
-                    <filter
-                        name="region_id"
-                        string="Region"
-                        domain=""
-                        context="{'group_by':'region_id'}"
-                    />
+					
+                    <filter name="stage_id" string="Estágio" domain="" context="{'group_by':'stage_id'}"/>
+					<filter name="team_id" string="Tipo Serviço" domain="" context="{'group_by':'team_id'}"/>
+					<filter name="type" string="Subtipo" domain="" context="{'group_by':'type'}"/>
+                    <filter name="person_id" string="Profissional Atribuído" domain="" context="{'group_by':'person_id'}"/>
+                    <filter name="territory_id" string="Territory" domain="" context="{'group_by':'territory_id'}"/>
+                    <filter name="branch_id" string="Branch" domain="" context="{'group_by':'branch_id'}"/>
+                    <filter name="district_id" string="District" domain="" context="{'group_by':'district_id'}"/>
+                    <filter name="region_id" string="Region" domain="" context="{'group_by':'region_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Data de Criação" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Data 1º Solicitação" name="request_early" context="{'group_by': 'request_early'}"/>
+                        <filter string="Data Agendada" name="scheduled_date_start" context="{'group_by':'scheduled_date_start'}"/>
+                        <filter string="Data Fim" name="scheduled_date_end" context="{'group_by':'scheduled_date_end'}"/>
                 </group>
             </search>
         </field>
@@ -420,9 +303,9 @@
             <calendar
                 string="FSM Orders"
                 date_start="scheduled_date_start"
-                date_delay="scheduled_duration"
                 color="stage_id"
             >
+<!-- Não necessario                date_delay="scheduled_duration" -->			
                 <field name="name" />
                 <field name="stage_id" />
                 <field name="location_id" />
@@ -442,7 +325,7 @@
     <record id="action_fsm_dash_order" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">fsm.order</field>
-        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
         <field name="search_view_id" ref="fsm_order_search_view" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -456,7 +339,8 @@
         <field name="model">fsm.order</field>
         <field name="arch" type="xml">
             <graph string="Service Orders" type="bar">
-                <field name="stage_id" type="row" />
+                <field name="scheduled_date_start"/>
+                <field name="stage_id" type="row"/>
             </graph>
         </field>
     </record>
@@ -465,7 +349,10 @@
         <field name="model">fsm.order</field>
         <field name="arch" type="xml">
             <pivot string="Service Orders" display_quantity="true">
-                <field name="stage_id" type="row" />
+                <field name="scheduled_date_end" interval="month" type="col"/>
+                <field name="stage_id" type="row"/>
+                <field name="type" type="row"/>
+                <field name="valor_servico" type="measure"/>
             </pivot>
         </field>
     </record>
